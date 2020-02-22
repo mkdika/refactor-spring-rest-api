@@ -8,8 +8,6 @@ import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -99,7 +97,16 @@ class PersonControllerTest {
 
     @Test
     fun `when data unavailable and request to findPersons should return 204 with empty body`() {
-        throw NotImplementedError()
+
+        Given {
+            port(port)
+        } When {
+            get("/api/persons")
+        } Then {
+            statusCode(HttpStatus.NO_CONTENT.value())
+        } Extract {
+            body().asString().equals(null)
+        }
     }
 
     @Test
