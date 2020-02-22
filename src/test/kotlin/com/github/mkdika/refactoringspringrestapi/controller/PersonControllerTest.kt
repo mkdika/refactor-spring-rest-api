@@ -8,6 +8,8 @@ import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -54,9 +56,11 @@ class PersonControllerTest {
         } Then {
             statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("firstName", equalTo("Maikel"))
-                    .body("lastName", equalTo("Chandika"))
-                    .body("email", equalTo("mkdika@gmail.com"))
+                    .body(
+                            "lastName", equalTo("Chandika"),
+                            "firstName", equalTo("Maikel"),
+                            "email", equalTo("mkdika@gmail.com")
+                    )
         }
     }
 
@@ -77,9 +81,20 @@ class PersonControllerTest {
     }
 
     @Test
-    fun `when data available and request to findPersons should return 200 with body`() {
-        throw NotImplementedError()
+    fun `when data available and request to findPersons should return 200 with not empty array body`() {
 
+        val dataSize = 3
+        databaseHelper.generatePersonsData(dataSize)
+
+        Given {
+            port(port)
+        } When {
+            get("/api/persons")
+        } Then {
+            statusCode(HttpStatus.OK.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("size()", equalTo(dataSize))
+        }
     }
 
     @Test
