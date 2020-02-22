@@ -51,49 +51,49 @@ class PersonControllerTest {
         } When {
             get("/api/persons/$userId")
         } Then {
-           statusCode(HttpStatus.OK.value())
-                   .contentType(MediaType.APPLICATION_JSON_VALUE)
-                   .body("firstName", equalTo("Maikel"))
-                   .body("lastName", equalTo("Chandika"))
-                   .body("email", equalTo("mkdika@gmail.com"))
+            statusCode(HttpStatus.OK.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("firstName", equalTo("Maikel"))
+                    .body("lastName", equalTo("Chandika"))
+                    .body("email", equalTo("mkdika@gmail.com"))
         }
     }
 
     @Test
     fun `given unavailable id when request to findPersonById should return 404`() {
-
+        throw NotImplementedError()
     }
 
     @Test
     fun `when data available and request to findPersons should return 200 with body`() {
+        throw NotImplementedError()
 
     }
 
     @Test
     fun `when data unavailable and request to findPersons should return 204 with empty body`() {
-
+        throw NotImplementedError()
     }
 
     @Test
     fun `given valid body when request to insertPerson should return 200 with body`() {
-
+        throw NotImplementedError()
     }
 
     @Test
     fun `given invalid body when request to insertPerson should return 400 with error message body`() {
-
+        throw NotImplementedError()
     }
 
     @Test
     fun `given unpresent mandatory fields body when request to insertPerson should return 400 with error message body`() {
-
+        throw NotImplementedError()
     }
 
     @Test
     fun `given unavailable path when request should return 404`() {
-
+        throw NotImplementedError()
     }
 
     class PersonList : List<Person> by ArrayList()
-
 }
