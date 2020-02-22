@@ -23,7 +23,7 @@ class PersonController {
                 .map { result ->
                     ResponseEntity.ok(result)
                 }
-                .orElse(ResponseEntity.noContent().build())
+                .orElse(ResponseEntity.notFound().build())
     }
 
     @GetMapping("/api/persons")
