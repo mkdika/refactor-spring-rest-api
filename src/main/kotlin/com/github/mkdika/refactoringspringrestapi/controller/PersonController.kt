@@ -28,7 +28,7 @@ class PersonController {
 
     @GetMapping("/api/persons")
     fun findPerson(): ResponseEntity<Iterable<Person>> {
-        return ResponseEntity(HttpStatus.NOT_ACCEPTABLE)
+        return ResponseEntity.ok().body(personRepository.findAll())
     }
 
     @PostMapping("/api/persons")
