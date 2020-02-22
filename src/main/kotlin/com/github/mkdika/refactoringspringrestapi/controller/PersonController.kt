@@ -26,9 +26,17 @@ class PersonController {
                 .orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/api/persons")
+    @GetMapping(
+            value = ["/api/persons"],
+            produces = [MediaType.APPLICATION_JSON_VALUE]
+            )
     fun findPerson(): ResponseEntity<Iterable<Person>> {
-        return ResponseEntity.ok().body(personRepository.findAll())
+        val data = personRepository.findAll().toList()
+        return if (data.isNotEmpty()) {
+            ResponseEntity.ok(data)
+        }else {
+            ResponseEntity.noContent().build()
+        }
     }
 
     @PostMapping("/api/persons")
