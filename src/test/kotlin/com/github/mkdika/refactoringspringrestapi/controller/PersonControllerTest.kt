@@ -3,6 +3,7 @@ package com.github.mkdika.refactoringspringrestapi.controller
 import com.github.mkdika.refactoringspringrestapi.RefactoringSpringRestApiApplication
 import com.github.mkdika.refactoringspringrestapi.helper.test.DatabaseHelper
 import com.github.mkdika.refactoringspringrestapi.model.Person
+import io.restassured.module.kotlin.extensions.Extract
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
@@ -60,8 +61,19 @@ class PersonControllerTest {
     }
 
     @Test
-    fun `given unavailable id when request to findPersonById should return 404`() {
-        throw NotImplementedError()
+    fun `given unavailable id when request to findPersonById should return 404 without body`() {
+
+        val notExistsUserId = 1
+
+        Given {
+            port(port)
+        } When {
+            get("/api/persons/$notExistsUserId")
+        } Then {
+            statusCode(HttpStatus.NOT_FOUND.value())
+        } Extract {
+            body().asString().equals(null)
+        }
     }
 
     @Test
