@@ -41,7 +41,8 @@ class PersonControllerTest {
         val dummyPerson = Person(
                 id = userId,
                 firstName = "Maikel",
-                lastName = "Chandika"
+                lastName = "Chandika",
+                email = "mkdika@gmail.com"
         )
         databaseHelper.insertPerson(dummyPerson)
 
