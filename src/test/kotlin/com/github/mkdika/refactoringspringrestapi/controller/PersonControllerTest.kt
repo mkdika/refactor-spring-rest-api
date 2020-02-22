@@ -1,21 +1,21 @@
 package com.github.mkdika.refactoringspringrestapi.controller
 
 import com.github.mkdika.refactoringspringrestapi.RefactoringSpringRestApiApplication
+import com.github.mkdika.refactoringspringrestapi.helper.test.DatabaseHelper
 import com.github.mkdika.refactoringspringrestapi.model.Person
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.hamcrest.CoreMatchers.equalTo
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
-
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [RefactoringSpringRestApiApplication::class],
@@ -23,14 +23,27 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
         properties = ["spring.profiles.active=test"])
 class PersonControllerTest {
 
+    @Autowired
+    private lateinit var databaseHelper: DatabaseHelper
+
     @LocalServerPort
     private var port: Int = 0
 
+    @AfterEach
+    private fun tearDown() {
+        databaseHelper.clearAllPersons()
+    }
 
     @Test
     fun `given available id when request to findPersonById should return 200 with body`() {
 
         val userId = 1
+        val dummyPerson = Person(
+                id = userId,
+                firstName = "Maikel",
+                lastName = "Chandika"
+        )
+        databaseHelper.insertPerson(dummyPerson)
 
         Given {
             port(port)
