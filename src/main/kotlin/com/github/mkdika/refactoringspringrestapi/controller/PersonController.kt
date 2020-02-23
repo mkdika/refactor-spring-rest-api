@@ -7,12 +7,16 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Validator
 
 @RestController
 class PersonController {
 
     @Autowired
     private lateinit var personRepository: PersonRepository
+
+    @Autowired
+    private lateinit var validator: Validator
 
     @GetMapping(
             value = ["/api/persons/{id}"],
@@ -45,27 +49,16 @@ class PersonController {
             produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     fun insertPerson(@RequestBody person: Person): ResponseEntity<Any> {
-        val messages = mutableListOf<String>()
-
-        if (person.firstName.isNotPresent()) {
-            messages.add("firstName cannot null or empty or blank")
-        }
-        if (person.email.isNotPresent()) {
-            messages.add("email cannot null or empty or blank")
-        }
-
-        if (messages.isEmpty()) {
-            return ResponseEntity.ok(personRepository.save(person))
+        val constraintViolations = validator.validate(person)
+        return if (constraintViolations.isEmpty()) {
+            ResponseEntity.ok(personRepository.save(person))
         } else {
-            return ResponseEntity(ResponseError(messages = messages), HttpStatus.BAD_REQUEST)
+            val errorMessages = constraintViolations.map { it.messageTemplate }.toList()
+            ResponseEntity(ResponseError(messages = errorMessages), HttpStatus.BAD_REQUEST)
         }
     }
 
     data class ResponseError(
             val messages: List<String> = emptyList()
     )
-
-    fun String.isNotPresent(): Boolean {
-        return this == null || this.isEmpty() || this.isBlank()
-    }
 }

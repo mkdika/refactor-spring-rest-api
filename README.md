@@ -6,7 +6,7 @@ The source code repository of refactoring Spring REST API tutorial.
 
 ## Refactoring list
 
-- [ ] Request validation
+- [X] Request validation
 - [ ] Controller advisor
 - [ ] Action pattern
 - [ ] Unit tests controller
