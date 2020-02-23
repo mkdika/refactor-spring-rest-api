@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
+
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(classes = [RefactoringSpringRestApiApplication::class],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -161,7 +162,26 @@ class PersonControllerTest {
 
     @Test
     fun `given unpresent mandatory fields body when request to insertPerson should return 400 with error message body`() {
-        throw NotImplementedError()
+
+        val objMapper = com.fasterxml.jackson.databind.ObjectMapper()
+        val invalidBody = hashMapOf(
+                "lastName" to "Chandika"
+        )
+
+        Given {
+            port(port)
+            header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+            body(objMapper.writeValueAsString(invalidBody))
+        } When {
+            post("/api/persons")
+        } Then {
+            statusCode(HttpStatus.BAD_REQUEST.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(
+                            "$", hasKey("messages"),
+                            "messages.size()", equalTo(2)
+                    )
+        }
     }
 
     @Test
