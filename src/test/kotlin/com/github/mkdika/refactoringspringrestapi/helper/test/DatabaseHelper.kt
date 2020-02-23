@@ -17,20 +17,23 @@ class DatabaseHelper {
         personRepository.deleteAll()
     }
 
-    fun insertPerson(person: Person) {
-        personRepository.save(person)
+    fun insertPerson(person: Person): Person {
+        return personRepository.save(person)
     }
 
     fun generatePersonsData(size: Int) {
         val faker = Faker()
-        (1..size).forEach { number ->
+        (1..size).forEach {
             val p = Person(
-                    id = number,
                     firstName = faker.name().firstName(),
                     lastName = faker.name().lastName(),
                     email = faker.internet().emailAddress()
             )
             personRepository.save(p)
         }
+    }
+
+    fun getAllPersons(): List<Person> {
+        return personRepository.findAll().toList()
     }
 }

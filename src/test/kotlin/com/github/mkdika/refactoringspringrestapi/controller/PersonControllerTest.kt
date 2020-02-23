@@ -38,26 +38,24 @@ class PersonControllerTest {
     @Test
     fun `given available id when request to findPersonById should return 200 with body`() {
 
-        val userId = 1
         val dummyPerson = Person(
-                id = userId,
                 firstName = "Maikel",
                 lastName = "Chandika",
                 email = "mkdika@gmail.com"
         )
-        databaseHelper.insertPerson(dummyPerson)
+        val savedPerson = databaseHelper.insertPerson(dummyPerson)
 
         Given {
             port(port)
         } When {
-            get("/api/persons/$userId")
+            get("/api/persons/${savedPerson.id}")
         } Then {
             statusCode(HttpStatus.OK.value())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(
-                            "lastName", equalTo("Chandika"),
-                            "firstName", equalTo("Maikel"),
-                            "email", equalTo("mkdika@gmail.com")
+                            "firstName", equalTo(dummyPerson.firstName),
+                            "lastName", equalTo(dummyPerson.lastName),
+                            "email", equalTo(dummyPerson.email)
                     )
         }
     }
@@ -65,7 +63,7 @@ class PersonControllerTest {
     @Test
     fun `given unavailable id when request to findPersonById should return 404 without body`() {
 
-        val notExistsUserId = 1
+        val notExistsUserId = 999
 
         Given {
             port(port)
@@ -147,6 +145,7 @@ class PersonControllerTest {
 
     @Test
     fun `given unavailable path when request should return 404`() {
+        throw NotImplementedError()
     }
 
     class PersonList : List<Person> by ArrayList()
