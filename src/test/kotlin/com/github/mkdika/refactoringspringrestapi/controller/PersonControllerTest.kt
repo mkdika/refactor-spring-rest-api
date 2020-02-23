@@ -111,7 +111,28 @@ class PersonControllerTest {
 
     @Test
     fun `given valid body when request to insertPerson should return 200 with body`() {
-        throw NotImplementedError()
+
+        val person = Person(
+                firstName = "Maikel",
+                lastName = "Chandika",
+                email = "mkdika@gmail.com"
+        )
+
+        Given {
+            port(port)
+            header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+            body(person)
+        } When {
+            post("/api/persons")
+        } Then {
+            statusCode(HttpStatus.OK.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(
+                            "firstName", equalTo(person.firstName),
+                            "lastName", equalTo(person.lastName),
+                            "email", equalTo(person.email)
+                    )
+        }
     }
 
     @Test
@@ -126,7 +147,6 @@ class PersonControllerTest {
 
     @Test
     fun `given unavailable path when request should return 404`() {
-        throw NotImplementedError()
     }
 
     class PersonList : List<Person> by ArrayList()
