@@ -8,6 +8,7 @@ import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Matchers.hasKey
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -134,8 +135,28 @@ class PersonControllerTest {
     }
 
     @Test
-    fun `given invalid body when request to insertPerson should return 400 with error message body`() {
-        throw NotImplementedError()
+    fun `given invalid body when request to insertPerson should return 400 with error messages body`() {
+
+        val invalidPerson = Person(
+                firstName = "",
+                lastName = "Chandika",
+                email = "  "
+        )
+
+        Given {
+            port(port)
+            header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+            body(invalidPerson)
+        } When {
+            post("/api/persons")
+        } Then {
+            statusCode(HttpStatus.BAD_REQUEST.value())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(
+                            "$", hasKey("messages"),
+                            "messages.size()", equalTo(2)
+                    )
+        }
     }
 
     @Test
