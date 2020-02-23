@@ -3,10 +3,10 @@ package com.github.mkdika.refactoringspringrestapi.controller
 import com.github.mkdika.refactoringspringrestapi.model.Person
 import com.github.mkdika.refactoringspringrestapi.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 import javax.validation.Validator
 
 @RestController
@@ -48,17 +48,7 @@ class PersonController {
             consumes = [MediaType.APPLICATION_JSON_VALUE],
             produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun insertPerson(@RequestBody person: Person): ResponseEntity<Any> {
-        val constraintViolations = validator.validate(person)
-        return if (constraintViolations.isEmpty()) {
-            ResponseEntity.ok(personRepository.save(person))
-        } else {
-            val errorMessages = constraintViolations.map { it.messageTemplate }.toList()
-            ResponseEntity(ResponseError(messages = errorMessages), HttpStatus.BAD_REQUEST)
-        }
+    fun insertPerson(@Valid @RequestBody person: Person): ResponseEntity<Any> {
+        return ResponseEntity.ok(personRepository.save(person))
     }
-
-    data class ResponseError(
-            val messages: List<String> = emptyList()
-    )
 }
