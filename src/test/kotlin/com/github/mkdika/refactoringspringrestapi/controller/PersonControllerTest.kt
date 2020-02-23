@@ -10,6 +10,7 @@ import io.restassured.module.kotlin.extensions.When
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matchers.hasKey
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -185,8 +186,18 @@ class PersonControllerTest {
     }
 
     @Test
-    fun `given unavailable path when request should return 404`() {
-        throw NotImplementedError()
+    fun `given unavailable path when request should return 404 with error message body`() {
+
+        val body = Given {
+            port(port)
+        } When {
+            get("/api/unavailable/path")
+        } Then {
+            statusCode(HttpStatus.NOT_FOUND.value())
+        } Extract {
+            body().asString()
+        }
+        assertTrue(body.isNotEmpty())
     }
 
     class PersonList : List<Person> by ArrayList()
