@@ -3,7 +3,6 @@ package com.github.mkdika.refactoringspringrestapi.controller
 import com.github.mkdika.refactoringspringrestapi.model.Person
 import com.github.mkdika.refactoringspringrestapi.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,18 +28,22 @@ class PersonController {
     @GetMapping(
             value = ["/api/persons"],
             produces = [MediaType.APPLICATION_JSON_VALUE]
-            )
+    )
     fun findPerson(): ResponseEntity<Iterable<Person>> {
         val data = personRepository.findAll().toList()
         return if (data.isNotEmpty()) {
             ResponseEntity.ok(data)
-        }else {
+        } else {
             ResponseEntity.noContent().build()
         }
     }
 
-    @PostMapping("/api/persons")
+    @PostMapping(
+            value = ["/api/persons"],
+            consumes = [MediaType.APPLICATION_JSON_VALUE],
+            produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun insertPerson(@RequestBody person: Person): ResponseEntity<Person> {
-        return ResponseEntity(HttpStatus.NOT_ACCEPTABLE)
+        return ResponseEntity.ok(personRepository.save(person))
     }
 }
