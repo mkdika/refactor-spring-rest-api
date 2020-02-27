@@ -34,7 +34,7 @@ class PersonController {
             value = ["/api/persons"],
             produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun findPerson(): ResponseEntity<Iterable<Person>> {
+    fun findAllPerson(): ResponseEntity<Iterable<Person>> {
         val data = personRepository.findAll().toList()
         return if (data.isNotEmpty()) {
             ResponseEntity.ok(data)

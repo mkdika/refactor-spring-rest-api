@@ -8,7 +8,7 @@ The source code repository of refactoring Spring REST API tutorial.
 
 - [X] Request validation
 - [X] Controller advisor
-- [ ] Action pattern
+- [ ] ~~Action pattern~~ Service layer component
 - [ ] Unit tests controller
 
 ## Copyright and License
